@@ -1,6 +1,7 @@
 build_and_pub:
   on:
-    release:
+    [ push ]
+  release:
       types: [ published ]
   env:
     LOGIN: ${{ secrets.DOCKER_LOGIN }}
