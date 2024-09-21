@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # копирование содержимого локальной директории src в рабочую директорию
-COPY gavrila_bot/ .
+COPY ./ .
 
 # команда, выполняемая при запуске контейнера
 CMD [ "python", "./aiogram_run.py" ]
