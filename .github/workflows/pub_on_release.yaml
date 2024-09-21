@@ -1,8 +1,6 @@
 name: pub_on_release
 
 on: push
-release:
-    types: [ published ]
 env:
   LOGIN: ${{ secrets.DOCKER_LOGIN }}
   NAME: ${{ secrets.DOCKER_NAME }}
