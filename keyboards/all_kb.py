@@ -6,7 +6,7 @@ from aiogram.types.web_app_info import WebAppInfo
 
 def main_kb(user_telegram_id: int):
     kb_list = [
-        [KeyboardButton(text='Запуск приложения', web_app=types.web_app_info.WebAppInfo(url='https://b045-2a01-540-8f01-9500-1517-407-9473-e64c.ngrok-free.app'))],
+        [KeyboardButton(text='Запуск приложения', web_app=types.web_app_info.WebAppInfo(url='https://4b59-2a01-540-8f01-9500-84e2-b4fa-2ca1-bfc5.ngrok-free.app'))],
     ]
     if user_telegram_id in admins:
         kb_list.append([KeyboardButton(text="Админка")])
