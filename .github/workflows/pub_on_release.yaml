@@ -1,5 +1,5 @@
 build_and_pub:
-  on: push
+  on: [push]
 release:
     types: [ published ]
 env:
