@@ -1,4 +1,3 @@
-name: Check rules
 on:
   release:
     types: [ published ]
