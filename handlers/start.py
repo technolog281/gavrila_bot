@@ -13,24 +13,12 @@ router = Router()
 db_conn_link = config('PG_LINK')
 
 
-def vtg_socket(user_first_name, tg_id):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('127.0.0.1', 1488))
-        s.listen()
-        conn, addr = s.accept()
-        with conn:
-            while True:
-                conn.sendall(user_first_name, tg_id)
-                break
-
-
 @router.message(Command('start'))
 async def start(message: types.Message):
     with closing(psycopg2.connect(db_conn_link)) as conn:
         with conn.cursor() as cursor:
             cursor.execute(f'''SELECT first_name FROM vtg_users where telegram_id = '{message.from_user.id}';''')
             result = cursor.fetchone()
-            vtg_socket(message.from_user.first_name, message.from_user.id)
     if result is not None:
         await message.answer(f'Привет, {message.from_user.first_name}. '
                              f'\n Запускай приложение и начнём считать ;)',
@@ -52,6 +40,5 @@ async def get_id(message):
                 conn.commit()
                 await message.answer(f'Привет, {check_reg_id[0]}, теперь мы знакомы :)',
                                      reply_markup=main_kb(message.from_user.id))
-                vtg_socket(message.from_user.first_name, message.from_user.id)
             else:
                 await message.answer(f'Ты кто такой? Иди нахуй отсюда, я тебя не звал.')
