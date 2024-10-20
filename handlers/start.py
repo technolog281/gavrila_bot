@@ -11,21 +11,59 @@ from contextlib import closing
 import sqlite3
 
 router = Router()
-# db_conn_link = config('PG_LINK')
 connection = sqlite3.connect('gavrila_bot.db')
+
+
+def initial():
+    with closing(connection.cursor()) as cursor:
+        cursor.execute('''CREATE TABLE "vtg_users" (
+	                        "first_name"	TEXT NOT NULL,
+	                        "second_name"	TEXT NOT NULL,
+	                        "work_schema"	INTEGER,
+	                        "tg_id"	NUMERIC,
+	                        "reg_id"	NUMERIC,
+	                        "user_name"	TEXT,
+	                        PRIMARY KEY("reg_id")
+                    )''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Ирина', 'Шишкина', '1', '', '9125296269', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Артём', 'Шабалин', '1', '', '9128368646', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Тутова', 'Любовь', '1', '', '9195826516', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Роман', 'Логинов', '2', '', '9630053850', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Дмитрий', 'Логинов', '2', '', '9091715672', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Иван', 'Кочев', '2', '', '9125230203', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Всеволод', 'Атаманюк', '1', '', '9195910701', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Елена', 'Гайдабурова', '2', '', '9512628870', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Матвей', 'Галковский', '1', '', '9965580490', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Александр', 'Ершов', '1', '', '9323163803', '');''')
+        cursor.execute(
+            '''INSERT INTO "main"."vtg_users" ("first_name", "second_name", "work_schema", "tg_id", "reg_id", "user_name") VALUES ('Тест', 'Тестовый', '1', '', '777', '');''')
+        connection.commit()
 
 
 @router.message(Command('start'))
 async def start(message: types.Message):
     with closing(connection.cursor()) as cursor:
+        check_db = cursor.execute('''SELECT name FROM sqlite_master WHERE type='table' AND name='vtg_users';''')
+        if not check_db.fetchall():
+            initial()
         cursor.execute(f'''SELECT first_name FROM vtg_users where tg_id = '{message.from_user.id}';''')
         result = cursor.fetchone()
-    if result is not None:
-        await message.answer(f'Привет, {message.from_user.first_name}. '
-                             f'\n Запускай приложение и начнём считать ;)',
-                             reply_markup=main_kb(message.from_user.id))
-    else:
-        await message.answer(f'Привет, мы не знакомы. Напиши свой идентификатор.')
+        if result is not None:
+            await message.answer(f'Привет, {message.from_user.first_name}. '
+                                 f'\n Запускай приложение и начнём считать ;)',
+                                 reply_markup=main_kb(message.from_user.id))
+        else:
+            await message.answer(f'Привет, мы не знакомы. Напиши свой идентификатор.')
 
 
 @router.message(F.text)
