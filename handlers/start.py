@@ -4,8 +4,6 @@ from keyboards.all_kb import main_kb
 from aiogram import Bot, Dispatcher, types
 from aiogram.types.web_app_info import WebAppInfo
 from create_bot import dp
-import psycopg2
-import psycopg2.extras
 from decouple import config
 from contextlib import closing
 import sqlite3
